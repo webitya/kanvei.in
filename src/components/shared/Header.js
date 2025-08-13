@@ -40,6 +40,13 @@ export default function Header() {
                 Home
               </Link>
               <Link
+                href="/products"
+                className="hover:opacity-80 transition-opacity"
+                style={{ fontFamily: "Montserrat, sans-serif" }}
+              >
+                Shop
+              </Link>
+              <Link
                 href="/jewellery"
                 className="hover:opacity-80 transition-opacity"
                 style={{ fontFamily: "Montserrat, sans-serif" }}

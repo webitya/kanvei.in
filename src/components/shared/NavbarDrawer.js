@@ -79,6 +79,14 @@ export default function NavbarDrawer({ isOpen, onClose }) {
                       Home
                     </Link>
                     <Link
+                      href="/products"
+                      className="block py-2 hover:opacity-80 transition-opacity"
+                      style={{ fontFamily: "Montserrat, sans-serif" }}
+                      onClick={onClose}
+                    >
+                      Shop
+                    </Link>
+                    <Link
                       href="/jewellery"
                       className="block py-2 hover:opacity-80 transition-opacity"
                       style={{ fontFamily: "Montserrat, sans-serif" }}
