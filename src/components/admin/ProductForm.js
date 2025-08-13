@@ -12,16 +12,16 @@ export default function ProductForm({ product, onSubmit, onCancel }) {
     featured: product?.featured || false,
     images: product?.images || [],
   })
-  const [categories, setCategories] = useState([])
+  const [categoriesHierarchy, setCategoriesHierarchy] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories")
+        const res = await fetch("/api/categories?withHierarchy=true")
         const data = await res.json()
         if (data.success) {
-          setCategories(data.categories)
+          setCategoriesHierarchy(data.categories)
         }
       } catch (error) {
         console.error("Error fetching categories:", error)
@@ -94,12 +94,21 @@ export default function ProductForm({ product, onSubmit, onCancel }) {
               style={{ fontFamily: "Montserrat, sans-serif", focusRingColor: "#5A0117" }}
             >
               <option value="">Select a category</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category.name}>
-                  {category.name}
-                </option>
+              {categoriesHierarchy.map((category) => (
+                <optgroup key={category._id} label={`📁 ${category.name}`}>
+                  <option value={category.name}>{category.name} (Main Category)</option>
+                  {category.subcategories &&
+                    category.subcategories.map((subcategory) => (
+                      <option key={subcategory._id} value={subcategory.name}>
+                        └─ {subcategory.name}
+                      </option>
+                    ))}
+                </optgroup>
               ))}
             </select>
+            <p className="text-xs mt-1" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
+              Choose a main category or subcategory for your product
+            </p>
           </div>
 
           <div>

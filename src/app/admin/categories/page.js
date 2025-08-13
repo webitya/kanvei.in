@@ -15,7 +15,7 @@ export default function AdminCategories() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("/api/categories")
+      const res = await fetch("/api/categories?withHierarchy=true")
       const data = await res.json()
       if (data.success) {
         setCategories(data.categories)
@@ -54,7 +54,7 @@ export default function AdminCategories() {
   }
 
   const handleDelete = async (categoryId) => {
-    if (!confirm("Are you sure you want to delete this category?")) return
+    if (!confirm("Are you sure you want to delete this category? This will also delete all its subcategories.")) return
 
     try {
       const res = await fetch(`/api/categories/${categoryId}`, { method: "DELETE" })
@@ -81,6 +81,8 @@ export default function AdminCategories() {
     setEditingCategory(null)
   }
 
+  const totalCategories = categories.reduce((total, cat) => total + 1 + (cat.subcategories?.length || 0), 0)
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -88,10 +90,10 @@ export default function AdminCategories() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
-              Categories
+              Categories & Subcategories
             </h1>
             <p className="mt-2" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-              Manage your product categories
+              Manage your product categories and subcategories
             </p>
           </div>
           {!showForm && (
@@ -112,7 +114,7 @@ export default function AdminCategories() {
         <div className="bg-white rounded-lg shadow-md">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-xl font-bold" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
-              All Categories ({categories.length})
+              All Categories ({totalCategories})
             </h2>
           </div>
           <div className="p-6">
@@ -123,46 +125,115 @@ export default function AdminCategories() {
                 ))}
               </div>
             ) : categories.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {categories.map((category) => (
-                  <div key={category._id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      {category.image && (
-                        <img
-                          src={category.image || "/placeholder.svg"}
-                          alt={category.name}
-                          className="w-16 h-16 object-cover rounded-lg"
-                        />
-                      )}
-                      <div>
-                        <h3 className="text-lg font-semibold" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
-                          {category.name}
-                        </h3>
-                        <p className="text-sm" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-                          {category.description}
-                        </p>
+                  <div key={category._id} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-4">
+                        {category.image && (
+                          <img
+                            src={category.image || "/placeholder.svg"}
+                            alt={category.name}
+                            className="w-16 h-16 object-cover rounded-lg"
+                          />
+                        )}
+                        <div>
+                          <h3
+                            className="text-lg font-semibold"
+                            style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}
+                          >
+                            📁 {category.name}
+                          </h3>
+                          <p className="text-sm" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
+                            {category.description}
+                          </p>
+                          <p
+                            className="text-xs mt-1"
+                            style={{ fontFamily: "Montserrat, sans-serif", color: "#AFABAA" }}
+                          >
+                            Main Category • {category.subcategories?.length || 0} subcategories
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(category)}
+                          className="px-4 py-2 border-2 font-semibold rounded-lg hover:opacity-80 transition-opacity"
+                          style={{
+                            borderColor: "#8C6141",
+                            color: "#8C6141",
+                            fontFamily: "Montserrat, sans-serif",
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(category._id)}
+                          className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
+                          style={{ fontFamily: "Montserrat, sans-serif" }}
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(category)}
-                        className="px-4 py-2 border-2 font-semibold rounded-lg hover:opacity-80 transition-opacity"
-                        style={{
-                          borderColor: "#8C6141",
-                          color: "#8C6141",
-                          fontFamily: "Montserrat, sans-serif",
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(category._id)}
-                        className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
-                        style={{ fontFamily: "Montserrat, sans-serif" }}
-                      >
-                        Delete
-                      </button>
-                    </div>
+
+                    {category.subcategories && category.subcategories.length > 0 && (
+                      <div className="mt-4 ml-8 space-y-2">
+                        {category.subcategories.map((subcategory) => (
+                          <div
+                            key={subcategory._id}
+                            className="flex items-center justify-between p-3 border rounded-lg bg-white"
+                          >
+                            <div className="flex items-center gap-3">
+                              {subcategory.image && (
+                                <img
+                                  src={subcategory.image || "/placeholder.svg"}
+                                  alt={subcategory.name}
+                                  className="w-12 h-12 object-cover rounded-lg"
+                                />
+                              )}
+                              <div>
+                                <h4 className="font-semibold" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
+                                  📄 {subcategory.name}
+                                </h4>
+                                <p
+                                  className="text-sm"
+                                  style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}
+                                >
+                                  {subcategory.description}
+                                </p>
+                                <p
+                                  className="text-xs"
+                                  style={{ fontFamily: "Montserrat, sans-serif", color: "#AFABAA" }}
+                                >
+                                  Subcategory of {category.name}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleEdit(subcategory)}
+                                className="px-3 py-1 border font-semibold rounded hover:opacity-80 transition-opacity text-sm"
+                                style={{
+                                  borderColor: "#8C6141",
+                                  color: "#8C6141",
+                                  fontFamily: "Montserrat, sans-serif",
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDelete(subcategory._id)}
+                                className="px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition-colors text-sm"
+                                style={{ fontFamily: "Montserrat, sans-serif" }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -1,20 +1,42 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function CategoryForm({ category, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     name: category?.name || "",
     description: category?.description || "",
     image: category?.image || "",
+    parentCategory: category?.parentCategory || "",
   })
   const [loading, setLoading] = useState(false)
+  const [mainCategories, setMainCategories] = useState([])
+
+  useEffect(() => {
+    const fetchMainCategories = async () => {
+      try {
+        const res = await fetch("/api/categories?mainOnly=true")
+        const data = await res.json()
+        if (data.success) {
+          setMainCategories(data.categories)
+        }
+      } catch (error) {
+        console.error("Error fetching main categories:", error)
+      }
+    }
+
+    fetchMainCategories()
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      await onSubmit(formData)
+      const submitData = {
+        ...formData,
+        parentCategory: formData.parentCategory || null,
+      }
+      await onSubmit(submitData)
     } catch (error) {
       console.error("Error submitting form:", error)
     } finally {
@@ -29,22 +51,49 @@ export default function CategoryForm({ category, onSubmit, onCancel }) {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label
-            className="block text-sm font-semibold mb-2"
-            style={{ fontFamily: "Montserrat, sans-serif", color: "#5A0117" }}
-          >
-            Category Name *
-          </label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50"
-            style={{ fontFamily: "Montserrat, sans-serif", focusRingColor: "#5A0117" }}
-            placeholder="Enter category name"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              className="block text-sm font-semibold mb-2"
+              style={{ fontFamily: "Montserrat, sans-serif", color: "#5A0117" }}
+            >
+              Category Name *
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50"
+              style={{ fontFamily: "Montserrat, sans-serif", focusRingColor: "#5A0117" }}
+              placeholder="Enter category name"
+            />
+          </div>
+
+          <div>
+            <label
+              className="block text-sm font-semibold mb-2"
+              style={{ fontFamily: "Montserrat, sans-serif", color: "#5A0117" }}
+            >
+              Parent Category
+            </label>
+            <select
+              value={formData.parentCategory}
+              onChange={(e) => setFormData({ ...formData, parentCategory: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50"
+              style={{ fontFamily: "Montserrat, sans-serif", focusRingColor: "#5A0117" }}
+            >
+              <option value="">Main Category (No Parent)</option>
+              {mainCategories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs mt-1" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
+              Leave empty to create a main category, or select a parent to create a subcategory
+            </p>
+          </div>
         </div>
 
         <div>

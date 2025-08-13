@@ -161,13 +161,13 @@ export default function HomePage() {
                 About Kanvei
               </h2>
               <p className="text-lg mb-6" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-                At Kanvei, we believe in the power of exceptional craftsmanship and timeless design. Our carefully
-                curated collection represents the finest in quality and style, bringing you products that stand the test
-                of time.
+                At Kanvei, we curate an exceptional collection spanning Stationery, Jewellery, Fashion, Cosmetics, and
+                Electronics. Our carefully selected products represent the finest in quality, style, and craftsmanship
+                across diverse categories.
               </p>
               <p className="text-lg mb-8" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-                Every item in our collection is selected with meticulous attention to detail, ensuring that you receive
-                only the best. Experience the difference that quality makes.
+                From premium writing instruments to elegant jewelry, from sophisticated fashion to cutting-edge
+                electronics, every item in our collection is chosen with meticulous attention to detail and quality.
               </p>
               <Link
                 href="/about"
@@ -180,7 +180,7 @@ export default function HomePage() {
             <div className="relative h-96 rounded-lg overflow-hidden">
               <img
                 src="/placeholder.svg?height=400&width=600"
-                alt="About Kanvei"
+                alt="KANVEI Product Collection"
                 className="w-full h-full object-cover"
               />
             </div>
