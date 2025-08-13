@@ -7,20 +7,23 @@ export async function POST(request) {
   try {
     await connectDB()
 
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET environment variable is not set")
+    const jwtSecret = process.env.JWT_SECRET
+    if (!jwtSecret || typeof jwtSecret !== "string" || jwtSecret.length === 0) {
+      console.error("JWT_SECRET environment variable is not properly configured")
       return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 })
     }
 
     const body = await request.json()
     const { facebookToken } = body
 
-    if (!facebookToken || typeof facebookToken !== "string") {
+    if (!facebookToken || typeof facebookToken !== "string" || facebookToken.trim().length === 0) {
       return NextResponse.json({ success: false, error: "Valid Facebook token is required" }, { status: 400 })
     }
 
     // Verify Facebook token
-    const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email&access_token=${facebookToken}`)
+    const response = await fetch(
+      `https://graph.facebook.com/me?fields=id,name,email&access_token=${facebookToken.trim()}`,
+    )
 
     if (!response.ok) {
       return NextResponse.json({ success: false, error: "Invalid Facebook token" }, { status: 400 })
@@ -51,18 +54,41 @@ export async function POST(request) {
       await user.save()
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id.toString(), email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    })
+    if (!user || !user._id) {
+      console.error("User creation/retrieval failed - no user ID")
+      return NextResponse.json({ success: false, error: "Failed to process user data" }, { status: 500 })
+    }
 
-    // Remove sensitive data from user object
+    // Ensure user ID is properly formatted
+    const userId = user._id.toString ? user._id.toString() : String(user._id)
+
+    if (!userId || userId.length === 0) {
+      console.error("Invalid user ID format")
+      return NextResponse.json({ success: false, error: "Failed to process user data" }, { status: 500 })
+    }
+
+    // Generate JWT token with enhanced error handling
+    let token
+    try {
+      token = jwt.sign(
+        {
+          userId: userId,
+          email: user.email,
+        },
+        jwtSecret,
+        { expiresIn: "7d" },
+      )
+    } catch (jwtError) {
+      console.error("JWT generation failed:", jwtError)
+      return NextResponse.json({ success: false, error: "Failed to generate authentication token" }, { status: 500 })
+    }
+
     const userResponse = {
-      _id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      emailVerified: user.emailVerified,
+      _id: userId,
+      name: user.name || "",
+      email: user.email || "",
+      role: user.role || "user",
+      emailVerified: Boolean(user.emailVerified),
     }
 
     return NextResponse.json({
