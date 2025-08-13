@@ -4,6 +4,7 @@ import Header from "../../components/shared/Header"
 import Footer from "../../components/shared/Footer"
 import ProductCard from "../../components/ProductCard"
 import { useAuth } from "../../contexts/AuthContext"
+import Link from "next/link"
 
 export default function WishlistPage() {
   const [wishlist, setWishlist] = useState([])
@@ -99,13 +100,13 @@ export default function WishlistPage() {
                 <p className="text-lg mb-6" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
                   Start adding products you love to your wishlist
                 </p>
-                <a
-                  href="/products"
-                  className="inline-block px-6 py-3 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
-                  style={{ backgroundColor: "#5A0117", fontFamily: "Montserrat, sans-serif" }}
-                >
-                  Browse Products
-                </a>
+           <Link
+  href="/products"
+  className="inline-block px-6 py-3 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+  style={{ backgroundColor: "#5A0117", fontFamily: "Montserrat, sans-serif" }}
+>
+  Browse Products
+</Link>
               </div>
             )}
           </div>

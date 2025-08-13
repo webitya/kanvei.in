@@ -22,7 +22,7 @@ export default function OrderConfirmationPage() {
               Order Confirmed!
             </h1>
             <p className="text-lg mb-8" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-              Thank you for your order. We'll send you a confirmation email shortly with your order details and tracking
+              Thank you for your order. We will send you a confirmation email shortly with your order details and tracking
               information.
             </p>
           </div>

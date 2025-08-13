@@ -119,7 +119,7 @@ export default function HomePage() {
                 className="text-lg max-w-2xl mx-auto"
                 style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}
               >
-                Explore our carefully curated categories to find exactly what you're looking for
+                Explore our carefully curated categories to find exactly what you are looking for
               </p>
             </div>
 

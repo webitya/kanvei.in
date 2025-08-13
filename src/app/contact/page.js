@@ -61,7 +61,7 @@ export default function ContactPage() {
               Contact Us
             </h1>
             <p className="text-lg max-w-2xl mx-auto" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-              We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              We had love to hear from you. Send us a message and we will respond as soon as possible.
             </p>
           </div>
 
@@ -156,7 +156,7 @@ export default function ContactPage() {
               {success && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                   <p className="text-green-600" style={{ fontFamily: "Montserrat, sans-serif" }}>
-                    Thank you for your message! We'll get back to you soon.
+                    Thank you for your message! We will get back to you soon.
                   </p>
                 </div>
               )}

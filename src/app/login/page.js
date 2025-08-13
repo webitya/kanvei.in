@@ -302,7 +302,7 @@ export default function LoginPage() {
 
             <div className="mt-6 text-center">
               <p style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-                Don't have an account?{" "}
+                Do not have an account?{" "}
                 <Link
                   href="/register"
                   className="font-semibold hover:opacity-80 transition-opacity"

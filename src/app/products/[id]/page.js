@@ -124,7 +124,7 @@ export default function ProductDetailPage() {
               Product not found
             </h1>
             <p style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-              The product you're looking for doesn't exist.
+              The product you are looking for does not exist.
             </p>
           </div>
         </main>

@@ -46,7 +46,7 @@ export default function CartPage() {
                 Your cart is empty
               </h2>
               <p className="text-lg mb-8" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-                Looks like you haven't added any items to your cart yet.
+                Looks like you have not added any items to your cart yet.
               </p>
               <Link
                 href="/products"
