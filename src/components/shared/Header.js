@@ -48,6 +48,13 @@ export default function Header() {
                 Shop
               </Link>
               <Link
+                href="/blog"
+                className="hover:opacity-80 transition-opacity"
+                style={{ fontFamily: "Montserrat, sans-serif" }}
+              >
+                Blog
+              </Link>
+              <Link
                 href="/jewellery"
                 className="hover:opacity-80 transition-opacity"
                 style={{ fontFamily: "Montserrat, sans-serif" }}
@@ -140,7 +147,7 @@ export default function Header() {
               )}
 
               <Link href="/cart" className="hover:opacity-80 transition-opacity relative">
-                <ShoppingCartIcon sx={{ fontSize: 22 }} />
+                <ShoppingCartIcon sx={{ fontSize: 24 }} />
                 {getCartItemsCount() > 0 && (
                   <span
                     className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs flex items-center justify-center text-white"

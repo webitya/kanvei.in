@@ -12,6 +12,7 @@ export default function AdminSidebar() {
     { href: "/admin/categories", label: "Categories", icon: "📁" },
     { href: "/admin/products", label: "Products", icon: "📦" },
     { href: "/admin/orders", label: "Orders", icon: "🛒" },
+    { href: "/admin/blogs", label: "Blogs", icon: "📝" },
     { href: "/admin/users", label: "Users", icon: "👥" },
   ]
 
