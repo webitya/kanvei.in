@@ -64,7 +64,7 @@ export default function OTPVerification({ email, type, onVerify, onResend, loadi
           Enter Verification Code
         </h3>
         <p className="text-sm" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-          We've sent a 6-digit code to {email}
+          We have sent a 6-digit code to {email}
         </p>
       </div>
 
