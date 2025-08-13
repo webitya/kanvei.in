@@ -4,6 +4,7 @@ import Header from "../components/shared/Header"
 import Footer from "../components/shared/Footer"
 import ProductCard from "../components/ProductCard"
 import CategoryCard from "../components/CategoryCard"
+import HeroCarousel from "../components/HeroCarousel"
 import Link from "next/link"
 
 export default function HomePage() {
@@ -18,7 +19,7 @@ export default function HomePage() {
         const productsRes = await fetch("/api/products?featured=true")
         const productsData = await productsRes.json()
         if (productsData.success) {
-          setFeaturedProducts(productsData.products.slice(0, 8))
+          setFeaturedProducts(productsData.products.slice(0, 4))
         }
 
         // Fetch categories
@@ -42,34 +43,101 @@ export default function HomePage() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section
-          className="relative h-screen flex items-center justify-center text-white"
-          style={{ backgroundColor: "#5A0117" }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-          <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6" style={{ fontFamily: "Sugar, serif" }}>
-              Kanvei
-            </h1>
-            <p
-              className="text-xl md:text-2xl mb-8 opacity-90"
-              style={{ fontFamily: "Montserrat, sans-serif", color: "#DBCCB7" }}
+        {/* Hero Carousel Section */}
+        <section className="relative">
+          <HeroCarousel />
+        </section>
+
+        {/* Categories and Featured Offers Section */}
+        <section className="flex flex-col sm:flex-row">
+          {/* Categories - Left Half */}
+          <div className="w-full sm:w-1/2 px-4 py-4 sm:py-6" style={{ backgroundColor: "#DBCCB7" }}>
+            <h3
+              className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-center"
+              style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}
             >
-              Discover Premium Quality Products with Exceptional Craftsmanship
-            </p>
-            <Link
-              href="/products"
-              className="inline-block px-8 py-4 text-lg font-semibold rounded-lg hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: "#8C6141", fontFamily: "Montserrat, sans-serif" }}
+              Categories
+            </h3>
+            {loading ? (
+              <div className="grid grid-cols-2 gap-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="bg-gray-200 rounded h-12 sm:h-16 animate-pulse"></div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                {categories.slice(0, 4).map((category) => (
+                  <Link
+                    key={category._id}
+                    href={`/${category.name.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
+                    className="p-2 rounded-lg text-center text-xs sm:text-sm font-medium hover:opacity-80 transition-opacity"
+                    style={{ backgroundColor: "#5A0117", color: "white", fontFamily: "Montserrat, sans-serif" }}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+            <div className="text-center mt-3 sm:mt-4">
+              <Link
+                href="/categories"
+                className="text-xs sm:text-sm font-medium hover:underline"
+                style={{ color: "#5A0117", fontFamily: "Montserrat, sans-serif" }}
+              >
+                View All →
+              </Link>
+            </div>
+          </div>
+
+          {/* Featured Offers - Right Half */}
+          <div className="w-full sm:w-1/2 px-4 py-4 sm:py-6" style={{ backgroundColor: "#8C6141" }}>
+            <h3
+              className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-center text-white"
+              style={{ fontFamily: "Sugar, serif" }}
             >
-              Shop Now
-            </Link>
+              Featured Offers
+            </h3>
+            {loading ? (
+              <div className="grid grid-cols-2 gap-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="bg-gray-200 rounded h-12 sm:h-16 animate-pulse"></div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                {featuredProducts.map((product) => (
+                  <Link
+                    key={product._id}
+                    href={`/products/${product._id}`}
+                    className="bg-white p-2 rounded-lg text-center hover:opacity-90 transition-opacity"
+                  >
+                    <div
+                      className="text-xs font-medium truncate"
+                      style={{ color: "#5A0117", fontFamily: "Montserrat, sans-serif" }}
+                    >
+                      {product.name}
+                    </div>
+                    <div className="text-xs font-bold" style={{ color: "#8C6141" }}>
+                      ${product.price}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+            <div className="text-center mt-3 sm:mt-4">
+              <Link
+                href="/products"
+                className="text-xs sm:text-sm font-medium text-white hover:underline"
+                style={{ fontFamily: "Montserrat, sans-serif" }}
+              >
+                Shop All →
+              </Link>
+            </div>
           </div>
         </section>
 
         {/* Featured Products Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <section className="py-8 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
               Featured Products
@@ -109,7 +177,7 @@ export default function HomePage() {
         </section>
 
         {/* Categories Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: "#DBCCB7" }}>
+        <section className="py-8 sm:py-16 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: "#DBCCB7" }}>
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold mb-4" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
@@ -154,7 +222,7 @@ export default function HomePage() {
         </section>
 
         {/* About Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <section className="py-8 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl font-bold mb-6" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
