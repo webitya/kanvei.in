@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import { ImageUpload } from "../ImageUpload"
+import  ImageUpload  from "../ImageUpload"
 
 export default function BlogForm({ blog = null, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
