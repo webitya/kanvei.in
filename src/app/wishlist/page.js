@@ -13,14 +13,14 @@ export default function WishlistPage() {
   const { user } = useAuth()
   const router = useRouter()
 
-  // If admin is logged in, redirect to admin dashboard (no wishlist for admin)
-  if (user?.role === "admin") {
-    if (typeof window !== "undefined") {
+  // ✅ Redirect admin users using useEffect
+  useEffect(() => {
+    if (user?.role === "admin") {
       router.replace("/admindashboard")
     }
-    return null
-  }
+  }, [user, router])
 
+  // ✅ Fetch wishlist
   useEffect(() => {
     const fetchWishlist = async () => {
       if (!user) {
@@ -44,13 +44,17 @@ export default function WishlistPage() {
     fetchWishlist()
   }, [user])
 
+  // ✅ Handle non-logged in users
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
+            <h1
+              className="text-2xl font-bold mb-4"
+              style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}
+            >
               Please Login
             </h1>
             <p style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
@@ -63,18 +67,32 @@ export default function WishlistPage() {
     )
   }
 
+  // ✅ Prevent render flicker for admin redirect
+  if (user?.role === "admin") {
+    return null
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
       <main className="flex-1">
         {/* Page Header */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 text-white" style={{ backgroundColor: "#5A0117" }}>
+        <section
+          className="py-16 px-4 sm:px-6 lg:px-8 text-white"
+          style={{ backgroundColor: "#5A0117" }}
+        >
           <div className="max-w-7xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: "Sugar, serif" }}>
+            <h1
+              className="text-4xl md:text-5xl font-bold mb-4"
+              style={{ fontFamily: "Sugar, serif" }}
+            >
               My Wishlist
             </h1>
-            <p className="text-xl opacity-90" style={{ fontFamily: "Montserrat, sans-serif", color: "#DBCCB7" }}>
+            <p
+              className="text-xl opacity-90"
+              style={{ fontFamily: "Montserrat, sans-serif", color: "#DBCCB7" }}
+            >
               Your favorite products saved for later
             </p>
           </div>
@@ -86,14 +104,24 @@ export default function WishlistPage() {
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="bg-gray-200 rounded-lg h-80 animate-pulse"></div>
+                  <div
+                    key={i}
+                    className="bg-gray-200 rounded-lg h-80 animate-pulse"
+                  ></div>
                 ))}
               </div>
             ) : wishlist.length > 0 ? (
               <>
                 <div className="mb-6">
-                  <p className="text-lg" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
-                    {wishlist.length} item{wishlist.length !== 1 ? "s" : ""} in your wishlist
+                  <p
+                    className="text-lg"
+                    style={{
+                      fontFamily: "Montserrat, sans-serif",
+                      color: "#8C6141",
+                    }}
+                  >
+                    {wishlist.length} item
+                    {wishlist.length !== 1 ? "s" : ""} in your wishlist
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -104,19 +132,31 @@ export default function WishlistPage() {
               </>
             ) : (
               <div className="text-center py-12">
-                <h3 className="text-2xl font-bold mb-4" style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}>
+                <h3
+                  className="text-2xl font-bold mb-4"
+                  style={{ fontFamily: "Sugar, serif", color: "#5A0117" }}
+                >
                   Your wishlist is empty
                 </h3>
-                <p className="text-lg mb-6" style={{ fontFamily: "Montserrat, sans-serif", color: "#8C6141" }}>
+                <p
+                  className="text-lg mb-6"
+                  style={{
+                    fontFamily: "Montserrat, sans-serif",
+                    color: "#8C6141",
+                  }}
+                >
                   Start adding products you love to your wishlist
                 </p>
-           <Link
-  href="/products"
-  className="inline-block px-6 py-3 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
-  style={{ backgroundColor: "#5A0117", fontFamily: "Montserrat, sans-serif" }}
->
-  Browse Products
-</Link>
+                <Link
+                  href="/products"
+                  className="inline-block px-6 py-3 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                  style={{
+                    backgroundColor: "#5A0117",
+                    fontFamily: "Montserrat, sans-serif",
+                  }}
+                >
+                  Browse Products
+                </Link>
               </div>
             )}
           </div>
