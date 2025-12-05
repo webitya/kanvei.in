@@ -3,12 +3,12 @@
 
 import { sendLoginNotificationEmail, sendAdminLoginNotificationEmail } from './lib/email.js'
 
-// Test regular user login notification
+// Test regular user login notification 
 async function testUserLogin() {
   console.log('🧪 Testing user login notification...')
   try {
     const result = await sendLoginNotificationEmail(
-      'test@example.com', // Replace with your email for testing
+      'test@example.com',
       'Test User',
       'Regular',
       new Date(),
